@@ -13,6 +13,7 @@ import javax.persistence.criteria.Root;
 import org.demoiselle.jee.crud.AbstractDAO;
 
 import br.com.annahas.ultrassom.entity.Ultrassom;
+import br.com.annahas.ultrassom.entity.Ultrassom_;
 
 public class UltrassomDAO extends AbstractDAO<Ultrassom, BigDecimal> {
 
@@ -29,6 +30,15 @@ public class UltrassomDAO extends AbstractDAO<Ultrassom, BigDecimal> {
 		CriteriaQuery<Ultrassom> query = builder.createQuery(Ultrassom.class);
 		Root<Ultrassom> from = query.from(Ultrassom.class);
 		query.select(from);
+		TypedQuery<Ultrassom> q = getEntityManager().createQuery(query);
+		return q.getResultList();
+	}
+
+	public List<Ultrassom> findByCodigoUsuario(BigDecimal codigoUsuario) {
+		CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
+		CriteriaQuery<Ultrassom> query = builder.createQuery(Ultrassom.class);
+		Root<Ultrassom> from = query.from(Ultrassom.class);
+		query.select(from).where(builder.equal(from.get(Ultrassom_.codigoUsuario), codigoUsuario));
 		TypedQuery<Ultrassom> q = getEntityManager().createQuery(query);
 		return q.getResultList();
 	}

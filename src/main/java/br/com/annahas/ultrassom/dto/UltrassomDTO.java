@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
+import br.com.annahas.ultrassom.entity.Ultrassom;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -45,6 +46,16 @@ public class UltrassomDTO implements Serializable {
 		this.tamanho = tamanho;
 		this.numeroIteracoes = numeroIteracoes;
 		this.url = url;
+	}
+
+	public UltrassomDTO(Ultrassom ultrassom) {
+		this.codigo = ultrassom.getCodigo();
+		this.codigoUsuario = ultrassom.getCodigoUsuario();
+		this.dataInicioReconstrucao = ultrassom.getDataInicioReconstrucao();
+		this.dataFimReconstrucao = ultrassom.getDataFimReconstrucao();
+		this.tamanho = ultrassom.getTamanho();
+		this.numeroIteracoes = ultrassom.getNumeroIteracoes();
+		this.url = ultrassom.getUrl();
 	}
 
 	public BigDecimal getCodigo() {
