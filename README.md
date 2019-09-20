@@ -11,3 +11,5 @@ MAVEN(talvez venha no eclipse)
 Adicionar o wildfly pelo eclipse, na aba SERVER
 
 Use case maker?
+
+Norma l2
