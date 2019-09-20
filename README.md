@@ -1,5 +1,7 @@
 Trabalho de Desenvolvimento Integrado De Sistemas
 
-Eclipse - Java
+Eclipse IDE for enterprise java develoer - Java
 
-Wildfly
+Wildfly 
+
+MAVEN(talvez venha no eclipse)
