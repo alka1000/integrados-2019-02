@@ -2,7 +2,7 @@ Trabalho de Desenvolvimento Integrado De Sistemas
 
 Eclipse IDE for enterprise java develoer - Java
 
-JAVA sdk 
+JAVA jdk - adicionar depois no eclipse
 
 Wildfly - entrar na barra bin, ./add-user.sh
 
