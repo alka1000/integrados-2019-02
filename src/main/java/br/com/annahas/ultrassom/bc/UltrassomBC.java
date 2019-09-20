@@ -3,7 +3,6 @@ package br.com.annahas.ultrassom.bc;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +19,12 @@ import br.com.annahas.ultrassom.entity.Ultrassom;
 import br.com.annahas.ultrassom.util.UltrassomUtil;
 
 public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
+	
+	private static List<Ultrassom> listaProcessamento = new ArrayList<>();
+	
+	private static final String LOCK = "###" + UltrassomBC.class.toString() + "###";
+	
+	private static boolean funcaoIniciada = false;
 	
 	public List<Ultrassom> findAll() {
 		return ((UltrassomDAO) dao).findAll();
@@ -43,17 +48,40 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 			throw new DemoiselleRestException("Erro no arquivo enviado", Status.BAD_REQUEST.getStatusCode());
 		}
 		
-		System.out.println(conteudo);
+//		System.out.println(conteudo);
 		
 		Ultrassom ultrassom = new Ultrassom();
 		ultrassom.setCodigoUsuario(codigoUsuario);
 		
-		/**
-		 * Fazer reconstrucao aqui.
-		 * 
-		 * 
-		 */
-		
+		synchronized (listaProcessamento) {
+			listaProcessamento.add(ultrassom);
+		}
+		if (!funcaoIniciada) {
+			synchronized (LOCK) {
+				if (!funcaoIniciada) {
+					funcaoIniciada = true;
+					new Thread() {
+						public void run() {
+							while(true) {
+								Ultrassom item = null;
+								synchronized (listaProcessamento) {
+									if (listaProcessamento.size() > 0) {
+										item = listaProcessamento.remove(0);
+									}
+								}
+								if (item != null) {
+									/**
+									 * Fazer reconstrucao aqui.
+									 * 
+									 * 
+									 */
+								}
+							}
+						}
+					}.start();
+				}
+			}
+		}
 //		persist(ultrassom);
 	}
 	
