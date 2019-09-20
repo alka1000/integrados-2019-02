@@ -2,6 +2,7 @@ package br.com.annahas.ultrassom.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Blob;
 import java.util.Calendar;
 
 import javax.persistence.Column;
@@ -28,6 +29,10 @@ public class Ultrassom implements Serializable {
 	@Column(name = "codigousuario")
 	@NotNull
 	private BigDecimal codigoUsuario;
+
+	@Column(name = "codigotipoalgoritmo")
+	@NotNull
+	private BigDecimal codigoTipoAlgoritmo;
 	
 	@Column(name = "datainicio")
 	@NotNull
@@ -45,23 +50,30 @@ public class Ultrassom implements Serializable {
 	@NotNull
 	private BigDecimal numeroIteracoes;
 	
-	@Column(name = "url")
+	@Column(name = "sinal")
 	@NotNull
-	private String url;
+	private String sinal;
+	
+	@Column(name = "imagem")
+	@NotNull
+	private Blob imagem;
 
 	public Ultrassom() {
 	}
 
-	public Ultrassom(BigDecimal codigo, BigDecimal codigoUsuario, Calendar dataInicioReconstrucao,
-			Calendar dataFimReconstrucao, BigDecimal tamanho, BigDecimal numeroIteracoes, String url) {
+	public Ultrassom(BigDecimal codigo, BigDecimal codigoUsuario, BigDecimal codigoTipoAlgoritmo,
+			Calendar dataInicioReconstrucao, Calendar dataFimReconstrucao, BigDecimal tamanho,
+			BigDecimal numeroIteracoes, String sinal, Blob imagem) {
 		super();
 		this.codigo = codigo;
 		this.codigoUsuario = codigoUsuario;
+		this.codigoTipoAlgoritmo = codigoTipoAlgoritmo;
 		this.dataInicioReconstrucao = dataInicioReconstrucao;
 		this.dataFimReconstrucao = dataFimReconstrucao;
 		this.tamanho = tamanho;
 		this.numeroIteracoes = numeroIteracoes;
-		this.url = url;
+		this.sinal = sinal;
+		this.imagem = imagem;
 	}
 
 	public BigDecimal getCodigo() {
@@ -78,6 +90,14 @@ public class Ultrassom implements Serializable {
 
 	public void setCodigoUsuario(BigDecimal codigoUsuario) {
 		this.codigoUsuario = codigoUsuario;
+	}
+
+	public BigDecimal getCodigoTipoAlgoritmo() {
+		return codigoTipoAlgoritmo;
+	}
+
+	public void setCodigoTipoAlgoritmo(BigDecimal codigoTipoAlgoritmo) {
+		this.codigoTipoAlgoritmo = codigoTipoAlgoritmo;
 	}
 
 	public Calendar getDataInicioReconstrucao() {
@@ -112,12 +132,20 @@ public class Ultrassom implements Serializable {
 		this.numeroIteracoes = numeroIteracoes;
 	}
 
-	public String getUrl() {
-		return url;
+	public String getSinal() {
+		return sinal;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setSinal(String sinal) {
+		this.sinal = sinal;
+	}
+
+	public Blob getImagem() {
+		return imagem;
+	}
+
+	public void setImagem(Blob imagem) {
+		this.imagem = imagem;
 	}
 
 	public static long getSerialversionuid() {
@@ -129,12 +157,14 @@ public class Ultrassom implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+		result = prime * result + ((codigoTipoAlgoritmo == null) ? 0 : codigoTipoAlgoritmo.hashCode());
 		result = prime * result + ((codigoUsuario == null) ? 0 : codigoUsuario.hashCode());
 		result = prime * result + ((dataFimReconstrucao == null) ? 0 : dataFimReconstrucao.hashCode());
 		result = prime * result + ((dataInicioReconstrucao == null) ? 0 : dataInicioReconstrucao.hashCode());
+		result = prime * result + ((imagem == null) ? 0 : imagem.hashCode());
 		result = prime * result + ((numeroIteracoes == null) ? 0 : numeroIteracoes.hashCode());
+		result = prime * result + ((sinal == null) ? 0 : sinal.hashCode());
 		result = prime * result + ((tamanho == null) ? 0 : tamanho.hashCode());
-		result = prime * result + ((url == null) ? 0 : url.hashCode());
 		return result;
 	}
 
@@ -152,6 +182,11 @@ public class Ultrassom implements Serializable {
 				return false;
 		} else if (!codigo.equals(other.codigo))
 			return false;
+		if (codigoTipoAlgoritmo == null) {
+			if (other.codigoTipoAlgoritmo != null)
+				return false;
+		} else if (!codigoTipoAlgoritmo.equals(other.codigoTipoAlgoritmo))
+			return false;
 		if (codigoUsuario == null) {
 			if (other.codigoUsuario != null)
 				return false;
@@ -167,29 +202,36 @@ public class Ultrassom implements Serializable {
 				return false;
 		} else if (!dataInicioReconstrucao.equals(other.dataInicioReconstrucao))
 			return false;
+		if (imagem == null) {
+			if (other.imagem != null)
+				return false;
+		} else if (!imagem.equals(other.imagem))
+			return false;
 		if (numeroIteracoes == null) {
 			if (other.numeroIteracoes != null)
 				return false;
 		} else if (!numeroIteracoes.equals(other.numeroIteracoes))
+			return false;
+		if (sinal == null) {
+			if (other.sinal != null)
+				return false;
+		} else if (!sinal.equals(other.sinal))
 			return false;
 		if (tamanho == null) {
 			if (other.tamanho != null)
 				return false;
 		} else if (!tamanho.equals(other.tamanho))
 			return false;
-		if (url == null) {
-			if (other.url != null)
-				return false;
-		} else if (!url.equals(other.url))
-			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Ultrassom [codigo=" + codigo + ", codigoUsuario=" + codigoUsuario + ", dataInicioReconstrucao="
-				+ dataInicioReconstrucao + ", dataFimReconstrucao=" + dataFimReconstrucao + ", tamanho=" + tamanho
-				+ ", numeroIteracoes=" + numeroIteracoes + ", url=" + url + "]";
+		return "Ultrassom [codigo=" + codigo + ", codigoUsuario=" + codigoUsuario + ", codigoTipoAlgoritmo="
+				+ codigoTipoAlgoritmo + ", dataInicioReconstrucao=" + dataInicioReconstrucao + ", dataFimReconstrucao="
+				+ dataFimReconstrucao + ", tamanho=" + tamanho + ", numeroIteracoes=" + numeroIteracoes + ", sinal="
+				+ sinal + ", imagem=" + imagem + "]";
 	}
+	
 	
 }

@@ -30,14 +30,11 @@ public class UltrassomDTO implements Serializable {
 	@ApiModelProperty(value = "Número de iterações realizadas para reconstruir a imagem.", dataType = "int")
 	private BigDecimal numeroIteracoes;
 	
-	@ApiModelProperty(value = "URL da imagem.")
-	private String url;
-	
 	public UltrassomDTO() {
 	}
 	
 	public UltrassomDTO(BigDecimal codigo, BigDecimal codigoUsuario, Calendar dataInicioReconstrucao,
-			Calendar dataFimReconstrucao, BigDecimal tamanho, BigDecimal numeroIteracoes, String url) {
+			Calendar dataFimReconstrucao, BigDecimal tamanho, BigDecimal numeroIteracoes) {
 		super();
 		this.codigo = codigo;
 		this.codigoUsuario = codigoUsuario;
@@ -45,7 +42,6 @@ public class UltrassomDTO implements Serializable {
 		this.dataFimReconstrucao = dataFimReconstrucao;
 		this.tamanho = tamanho;
 		this.numeroIteracoes = numeroIteracoes;
-		this.url = url;
 	}
 
 	public UltrassomDTO(Ultrassom ultrassom) {
@@ -55,7 +51,6 @@ public class UltrassomDTO implements Serializable {
 		this.dataFimReconstrucao = ultrassom.getDataFimReconstrucao();
 		this.tamanho = ultrassom.getTamanho();
 		this.numeroIteracoes = ultrassom.getNumeroIteracoes();
-		this.url = ultrassom.getUrl();
 	}
 
 	public BigDecimal getCodigo() {
@@ -106,14 +101,6 @@ public class UltrassomDTO implements Serializable {
 		this.numeroIteracoes = numeroIteracoes;
 	}
 
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -124,7 +111,6 @@ public class UltrassomDTO implements Serializable {
 		result = prime * result + ((dataInicioReconstrucao == null) ? 0 : dataInicioReconstrucao.hashCode());
 		result = prime * result + ((numeroIteracoes == null) ? 0 : numeroIteracoes.hashCode());
 		result = prime * result + ((tamanho == null) ? 0 : tamanho.hashCode());
-		result = prime * result + ((url == null) ? 0 : url.hashCode());
 		return result;
 	}
 
@@ -167,11 +153,6 @@ public class UltrassomDTO implements Serializable {
 				return false;
 		} else if (!tamanho.equals(other.tamanho))
 			return false;
-		if (url == null) {
-			if (other.url != null)
-				return false;
-		} else if (!url.equals(other.url))
-			return false;
 		return true;
 	}
 
@@ -179,7 +160,7 @@ public class UltrassomDTO implements Serializable {
 	public String toString() {
 		return "UltrassomDTO [codigo=" + codigo + ", codigoUsuario=" + codigoUsuario + ", dataInicioReconstrucao="
 				+ dataInicioReconstrucao + ", dataFimReconstrucao=" + dataFimReconstrucao + ", tamanho=" + tamanho
-				+ ", numeroIteracoes=" + numeroIteracoes + ", url=" + url + "]";
+				+ ", numeroIteracoes=" + numeroIteracoes + "]";
 	}
 	
 }
