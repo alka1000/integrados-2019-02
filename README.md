@@ -13,3 +13,5 @@ Adicionar o wildfly pelo eclipse, na aba SERVER
 Use case maker?
 
 Norma l2
+
+Dbeaver - para o mysql
