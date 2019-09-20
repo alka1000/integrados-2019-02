@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
 import javax.ws.rs.core.Response.Status;
 
 import org.demoiselle.jee.crud.AbstractBusiness;
@@ -39,6 +40,7 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 		return dtoList;
 	}
 
+	@Transactional
 	public void salvaUltrassom(BigDecimal codigoUsuario, final MultipartFormDataInput inputData) throws IOException, SQLException {
 		
 		
@@ -52,6 +54,7 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 		
 		Ultrassom ultrassom = new Ultrassom();
 		ultrassom.setCodigoUsuario(codigoUsuario);
+		ultrassom.setSinal(conteudo);
 		
 		synchronized (listaProcessamento) {
 			listaProcessamento.add(ultrassom);
@@ -82,7 +85,7 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 				}
 			}
 		}
-//		persist(ultrassom);
+		((UltrassomDAO)dao).persist(ultrassom);
 	}
 	
 	

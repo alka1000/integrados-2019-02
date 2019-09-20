@@ -10,9 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "ultrassom", schema = "annahas")
@@ -20,42 +18,32 @@ public class Ultrassom implements Serializable {
 	private static final long serialVersionUID = -4596465796503453763L;
 
 	@Id
-	@SequenceGenerator(name = "ULTRASSOM_CODIGO_GENERATOR", 
-		sequenceName = "SQULTRASSOM", allocationSize = 1, initialValue = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ULTRASSOM_CODIGO_GENERATOR")
+	@GeneratedValue
 	@Column(name = "codigo")
 	private BigDecimal codigo;
 
 	@Column(name = "codigousuario")
-	@NotNull
 	private BigDecimal codigoUsuario;
 
 	@Column(name = "codigotipoalgoritmo")
-	@NotNull
 	private BigDecimal codigoTipoAlgoritmo;
 	
 	@Column(name = "datainicio")
-	@NotNull
 	private Calendar dataInicioReconstrucao;
 	
 	@Column(name = "datafim")
-	@NotNull
 	private Calendar dataFimReconstrucao;
 	
 	@Column(name = "tamanho")
-	@NotNull
 	private BigDecimal tamanho;
 	
 	@Column(name = "numeroiteracoes")
-	@NotNull
 	private BigDecimal numeroIteracoes;
 	
 	@Column(name = "sinal")
-	@NotNull
 	private String sinal;
 	
 	@Column(name = "imagem")
-	@NotNull
 	private Blob imagem;
 
 	public Ultrassom() {

@@ -42,6 +42,6 @@ public class UltrassomDAO extends AbstractDAO<Ultrassom, BigDecimal> {
 		TypedQuery<Ultrassom> q = getEntityManager().createQuery(query);
 		return q.getResultList();
 	}
-
+	
 }
 
