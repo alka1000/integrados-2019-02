@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 @Entity
@@ -41,6 +42,7 @@ public class Ultrassom implements Serializable {
 	private BigDecimal numeroIteracoes;
 	
 	@Column(name = "sinal")
+	@Lob
 	private String sinal;
 	
 	@Column(name = "imagem")
