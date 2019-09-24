@@ -3,9 +3,12 @@ package br.com.annahas.ultrassom.util;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.text.Normalizer;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -115,4 +118,34 @@ public class UltrassomUtil {
 		}
 		return conteudo;
 	}
+	
+	public static Blob generateBlobFile(byte[] inputByteStream) 
+		throws IOException, SQLException {
+		Blob blob = new SerialBlob(inputByteStream);
+		return blob;
+	}
+	
+	public static String generateFotoBase64(Blob conteudoBlob) throws SQLException {
+
+		byte[] bytes = conteudoBlob.getBytes(1,  (int) conteudoBlob.length());
+		
+		return Base64.getEncoder().encodeToString(bytes);
+	}
+	
+	public static StringBuilder generateStringBuilder(Blob conteudoBlob) 
+			throws IOException, SQLException {
+		StringBuilder sBuilder = new StringBuilder();
+		
+		int read = 0;
+		char[] buffer = new char[2048];
+		
+		try (Reader reader = new InputStreamReader(conteudoBlob.getBinaryStream())) {
+			while ((read = reader.read(buffer)) != -1) {
+				sBuilder.append(buffer, 0, read);
+			}
+		}
+		
+		return sBuilder;
+	}
+
 }
