@@ -24,24 +24,33 @@ public class UltrassomDTO implements Serializable {
 	@ApiModelProperty(value = "Timestamp do término da reconstrução.")
 	private Calendar dataFimReconstrucao;
 	
-	@ApiModelProperty(value = "Tamanho da imagem em pixels.", dataType = "int")
-	private BigDecimal tamanho;
+	@ApiModelProperty(value = "Tamanho da altura da imagem em pixels.", dataType = "int")
+	private BigDecimal altura;
+	
+	@ApiModelProperty(value = "Tamanho da largura da imagem em pixels.", dataType = "int")
+	private BigDecimal largura;
 	
 	@ApiModelProperty(value = "Número de iterações realizadas para reconstruir a imagem.", dataType = "int")
 	private BigDecimal numeroIteracoes;
+	
+	@ApiModelProperty(value = "Algoritmo utilizado.", dataType = "int")
+	private BigDecimal algoritmo;
 	
 	public UltrassomDTO() {
 	}
 	
 	public UltrassomDTO(BigDecimal codigo, BigDecimal codigoUsuario, Calendar dataInicioReconstrucao,
-			Calendar dataFimReconstrucao, BigDecimal tamanho, BigDecimal numeroIteracoes) {
+			Calendar dataFimReconstrucao, BigDecimal altura, BigDecimal largura, BigDecimal numeroIteracoes,
+			BigDecimal algoritmo) {
 		super();
 		this.codigo = codigo;
 		this.codigoUsuario = codigoUsuario;
 		this.dataInicioReconstrucao = dataInicioReconstrucao;
 		this.dataFimReconstrucao = dataFimReconstrucao;
-		this.tamanho = tamanho;
+		this.altura = altura;
+		this.largura = largura;
 		this.numeroIteracoes = numeroIteracoes;
+		this.algoritmo = algoritmo;
 	}
 
 	public UltrassomDTO(Ultrassom ultrassom) {
@@ -49,7 +58,9 @@ public class UltrassomDTO implements Serializable {
 		this.codigoUsuario = ultrassom.getCodigoUsuario();
 		this.dataInicioReconstrucao = ultrassom.getDataInicioReconstrucao();
 		this.dataFimReconstrucao = ultrassom.getDataFimReconstrucao();
-		this.tamanho = ultrassom.getTamanho();
+		this.altura = ultrassom.getAltura();
+		this.largura = ultrassom.getLargura();
+		this.algoritmo = ultrassom.getCodigoTipoAlgoritmo();
 		this.numeroIteracoes = ultrassom.getNumeroIteracoes();
 	}
 
@@ -85,12 +96,20 @@ public class UltrassomDTO implements Serializable {
 		this.dataFimReconstrucao = dataFimReconstrucao;
 	}
 
-	public BigDecimal getTamanho() {
-		return tamanho;
+	public BigDecimal getAltura() {
+		return altura;
 	}
 
-	public void setTamanho(BigDecimal tamanho) {
-		this.tamanho = tamanho;
+	public void setAltura(BigDecimal altura) {
+		this.altura = altura;
+	}
+
+	public BigDecimal getLargura() {
+		return largura;
+	}
+
+	public void setLargura(BigDecimal largura) {
+		this.largura = largura;
 	}
 
 	public BigDecimal getNumeroIteracoes() {
@@ -101,16 +120,30 @@ public class UltrassomDTO implements Serializable {
 		this.numeroIteracoes = numeroIteracoes;
 	}
 
+	public BigDecimal getAlgoritmo() {
+		return algoritmo;
+	}
+
+	public void setAlgoritmo(BigDecimal algoritmo) {
+		this.algoritmo = algoritmo;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((algoritmo == null) ? 0 : algoritmo.hashCode());
+		result = prime * result + ((altura == null) ? 0 : altura.hashCode());
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
 		result = prime * result + ((codigoUsuario == null) ? 0 : codigoUsuario.hashCode());
 		result = prime * result + ((dataFimReconstrucao == null) ? 0 : dataFimReconstrucao.hashCode());
 		result = prime * result + ((dataInicioReconstrucao == null) ? 0 : dataInicioReconstrucao.hashCode());
+		result = prime * result + ((largura == null) ? 0 : largura.hashCode());
 		result = prime * result + ((numeroIteracoes == null) ? 0 : numeroIteracoes.hashCode());
-		result = prime * result + ((tamanho == null) ? 0 : tamanho.hashCode());
 		return result;
 	}
 
@@ -123,6 +156,16 @@ public class UltrassomDTO implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		UltrassomDTO other = (UltrassomDTO) obj;
+		if (algoritmo == null) {
+			if (other.algoritmo != null)
+				return false;
+		} else if (!algoritmo.equals(other.algoritmo))
+			return false;
+		if (altura == null) {
+			if (other.altura != null)
+				return false;
+		} else if (!altura.equals(other.altura))
+			return false;
 		if (codigo == null) {
 			if (other.codigo != null)
 				return false;
@@ -143,15 +186,15 @@ public class UltrassomDTO implements Serializable {
 				return false;
 		} else if (!dataInicioReconstrucao.equals(other.dataInicioReconstrucao))
 			return false;
+		if (largura == null) {
+			if (other.largura != null)
+				return false;
+		} else if (!largura.equals(other.largura))
+			return false;
 		if (numeroIteracoes == null) {
 			if (other.numeroIteracoes != null)
 				return false;
 		} else if (!numeroIteracoes.equals(other.numeroIteracoes))
-			return false;
-		if (tamanho == null) {
-			if (other.tamanho != null)
-				return false;
-		} else if (!tamanho.equals(other.tamanho))
 			return false;
 		return true;
 	}
@@ -159,8 +202,8 @@ public class UltrassomDTO implements Serializable {
 	@Override
 	public String toString() {
 		return "UltrassomDTO [codigo=" + codigo + ", codigoUsuario=" + codigoUsuario + ", dataInicioReconstrucao="
-				+ dataInicioReconstrucao + ", dataFimReconstrucao=" + dataFimReconstrucao + ", tamanho=" + tamanho
-				+ ", numeroIteracoes=" + numeroIteracoes + "]";
+				+ dataInicioReconstrucao + ", dataFimReconstrucao=" + dataFimReconstrucao + ", altura=" + altura
+				+ ", largura=" + largura + ", numeroIteracoes=" + numeroIteracoes + ", algoritmo=" + algoritmo + "]";
 	}
 	
 }

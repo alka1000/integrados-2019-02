@@ -41,7 +41,7 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 	}
 
 	@Transactional
-	public void salvaUltrassom(BigDecimal codigoUsuario, final MultipartFormDataInput inputData) throws IOException, SQLException {
+	public void salvaUltrassom(BigDecimal codigoUsuario, BigDecimal codigoAlgoritmo, BigDecimal altura, BigDecimal largura, final MultipartFormDataInput inputData) throws IOException, SQLException {
 		
 		
 		String conteudo = UltrassomUtil.multipartToString(inputData);
@@ -55,6 +55,9 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 		Ultrassom ultrassom = new Ultrassom();
 		ultrassom.setCodigoUsuario(codigoUsuario);
 		ultrassom.setSinal(conteudo);
+		ultrassom.setAltura(altura);
+		ultrassom.setLargura(largura);
+		ultrassom.setCodigoTipoAlgoritmo(codigoAlgoritmo);
 		
 		synchronized (listaProcessamento) {
 			listaProcessamento.add(ultrassom);

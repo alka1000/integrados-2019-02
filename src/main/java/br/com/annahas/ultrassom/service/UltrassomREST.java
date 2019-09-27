@@ -74,7 +74,7 @@ public class UltrassomREST {
 	@POST
 	@Consumes(value = { MediaType.MULTIPART_FORM_DATA })
 	@Produces(value = { MediaType.APPLICATION_JSON })
-	@Path("/{codigoUsuario}")
+	@Path("/algoritmo/{codigoAlgoritmo}/altura/{valorAltura}/largura/{valorLargura}/usuario/{codigoUsuario}")
 	@ApiResponses(value = {
 			@ApiResponse(code = 204, message = "Ultrassom cadastrado com sucesso."),
 			@ApiResponse(code = 400, message = "Erro de validação: verificar mensagem."),
@@ -84,6 +84,15 @@ public class UltrassomREST {
 			@ApiResponse(code = 500, message = "Erro nos dados enviados ou erro interno do servidor.")
 	})
 	public Response salvaUltrassom(
+			@PathParam("codigoAlgoritmo")
+			@ApiParam(required = true, allowEmptyValue = false, value = "Código do usuário.")
+			BigDecimal codigoAlgoritmo,
+			@PathParam("valorAltura")
+			@ApiParam(required = true, allowEmptyValue = false, value = "Código do usuário.")
+			BigDecimal altura,
+			@PathParam("valorLargura")
+			@ApiParam(required = true, allowEmptyValue = false, value = "Código do usuário.")
+			BigDecimal largura,
 			@PathParam("codigoUsuario")
 			@ApiParam(required = true, allowEmptyValue = false, value = "Código do usuário.")
 			BigDecimal codigoUsuario,
@@ -91,7 +100,7 @@ public class UltrassomREST {
 			final MultipartFormDataInput inputData
 		) {
 		try {
-			ultrassomBC.salvaUltrassom(codigoUsuario, inputData);
+			ultrassomBC.salvaUltrassom(codigoUsuario, codigoAlgoritmo, altura, largura, inputData);
 			
 			return Response.noContent().build();
 		} catch (DemoiselleRestException dre) {
