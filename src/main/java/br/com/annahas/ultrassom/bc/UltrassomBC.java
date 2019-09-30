@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -80,6 +81,8 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 									}
 								}
 								if (item != null) {
+									item.setDataInicioReconstrucao(Calendar.getInstance());
+									
 									String[] sinaisStr = item.getSinal().split("\n");
 									double[] sinais = new double[sinaisStr.length];
 									for (int i = 0; i < sinaisStr.length; i++) {
@@ -167,7 +170,7 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 									}
 									
 									item.setNumeroIteracoes(BigDecimal.valueOf(i));
-									
+									item.setDataFimReconstrucao(Calendar.getInstance());
 									/**
 									 * transformar o vec_f em imagem (Blob de base64) e salvar na entidade
 									 * 
