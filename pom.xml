@@ -18,7 +18,7 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<parent>
 		<groupId>org.demoiselle.jee</groupId>
 		<artifactId>demoiselle-parent-rest</artifactId>
@@ -26,15 +26,21 @@
 	</parent>
 
 	<dependencies>
-		
+
 		<!-- https://mvnrepository.com/artifact/org.wildfly/wildfly-feature-pack -->
 		<dependency>
-		    <groupId>org.wildfly</groupId>
-		    <artifactId>wildfly-feature-pack</artifactId>
-		    <version>10.1.0.Final</version>
-		    <type>pom</type>
-		    <scope>provided</scope>
+			<groupId>org.wildfly</groupId>
+			<artifactId>wildfly-feature-pack</artifactId>
+			<version>10.1.0.Final</version>
+			<type>pom</type>
+			<scope>provided</scope>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>org.ejml</groupId>
+			<artifactId>ejml-all</artifactId>
+			<version>0.37.1</version>
+		</dependency>
+
 	</dependencies>
 </project>
