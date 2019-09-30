@@ -12,8 +12,10 @@ import javax.ws.rs.core.Response.Status;
 
 import org.demoiselle.jee.crud.AbstractBusiness;
 import org.demoiselle.jee.rest.exception.DemoiselleRestException;
+import org.ejml.data.DMatrixRMaj;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
+import br.com.annahas.ultrassom.constants.TipoAlgoritmoEnum;
 import br.com.annahas.ultrassom.dao.UltrassomDAO;
 import br.com.annahas.ultrassom.dto.UltrassomDTO;
 import br.com.annahas.ultrassom.entity.Ultrassom;
@@ -76,11 +78,29 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 									}
 								}
 								if (item != null) {
-									/**
-									 * Fazer reconstrucao aqui.
-									 * 
-									 * 
-									 */
+									String[] sinaisStr = item.getSinal().split("\n");
+									double[] sinais = new double[sinaisStr.length];
+									for (int i = 0; i < sinaisStr.length; i++) {
+										sinais[i] = Double.parseDouble(sinaisStr[i]);
+									}
+									DMatrixRMaj vec_g = new DMatrixRMaj(sinais);
+									DMatrixRMaj vec_f0 = new DMatrixRMaj(sinais.length);
+									
+									if (item.getCodigoTipoAlgoritmo().compareTo(TipoAlgoritmoEnum.ALGORITMO_1.getCodigo()) == 0 ) {
+										/**
+										 * Fazer reconstrucao do algoritmo 1 aqui.
+										 * 
+										 * 
+										 */
+									} else if (item.getCodigoTipoAlgoritmo().compareTo(TipoAlgoritmoEnum.ALGORITMO_2.getCodigo()) == 0 ) {
+										/**
+										 * Fazer reconstrucao do algoritmo 2 aqui.
+										 * 
+										 * 
+										 */
+									}
+									
+									
 								}
 							}
 						}
