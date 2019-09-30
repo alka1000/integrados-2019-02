@@ -121,7 +121,7 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 										double alpha = 0.0;
 										double beta = 0.0;
 										
-										// no final do loop, f final estará em vec_f1
+										// no final do loop, f final estará em vec_f
 										while (epsum > 0.0001) {
 											i++;
 											
@@ -141,6 +141,7 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 											epsum = NormOps_DDRM.normP2(vec_r1) - NormOps_DDRM.normP2(vec_r);
 											
 											if (epsum <= 0.0001) {
+												vec_f = vec_f1.copy(); // f(i) = f(i+1)
 												break;
 											}
 											
@@ -167,7 +168,12 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 									
 									item.setNumeroIteracoes(BigDecimal.valueOf(i));
 									
+									/**
+									 * transformar o vec_f em imagem (Blob de base64) e salvar na entidade
+									 * 
+									 */
 									
+									((UltrassomDAO)dao).persist(item);
 								}
 							}
 						}
