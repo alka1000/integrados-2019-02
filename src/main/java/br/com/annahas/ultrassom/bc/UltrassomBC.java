@@ -137,7 +137,7 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 											vec_r1 = vec_r.copy(); // r(i+1) = r(i)
 											CommonOps_DDRM.multAdd(-alpha, mat_H, vec_p, vec_r1); // r(i+1) = r(i+1) - alpha(i) * H * p(i)
 											
-											// calculo epsum
+											// epsum = ||r(i+1)||2 -||r(i)||2 
 											epsum = NormOps_DDRM.normP2(vec_r1) - NormOps_DDRM.normP2(vec_r);
 											
 											if (epsum <= 0.0001) {
@@ -152,9 +152,9 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 											CommonOps_DDRM.multTransA(mat_H, vec_r1, vec_p1); // p(i+1) = HT * r(i+1)
 											CommonOps_DDRM.addEquals(vec_p1, beta, vec_p); // p(i+1) = p(i+1) + beta * p(i)
 											
-											vec_r = vec_r1.copy();
-											vec_p = vec_p1.copy();
-											vec_f = vec_f1.copy();
+											vec_r = vec_r1.copy(); // r(i) = r(i+1)
+											vec_p = vec_p1.copy(); // p(i) = p(i+1)
+											vec_f = vec_f1.copy(); // f(i) = f(i+1)
 											
 										}
 									} else if (item.getCodigoTipoAlgoritmo().compareTo(TipoAlgoritmoEnum.ALGORITMO_2.getCodigo()) == 0 ) {
