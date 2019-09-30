@@ -83,6 +83,10 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 									for (int i = 0; i < sinaisStr.length; i++) {
 										sinais[i] = Double.parseDouble(sinaisStr[i]);
 									}
+									/**
+									 *  decidi utilizar a notação vec_X e mat_X para conseguir dar os nomes das variáveis
+									 *  	igual como foi apresentado, para melhor visualização do que está acontecendo. 
+									 */
 									DMatrixRMaj vec_g = new DMatrixRMaj(sinais);
 									DMatrixRMaj vec_f0 = new DMatrixRMaj(sinais.length);
 									
