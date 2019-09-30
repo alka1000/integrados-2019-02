@@ -13,6 +13,8 @@ import javax.ws.rs.core.Response.Status;
 import org.demoiselle.jee.crud.AbstractBusiness;
 import org.demoiselle.jee.rest.exception.DemoiselleRestException;
 import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.ejml.dense.row.NormOps_DDRM;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import br.com.annahas.ultrassom.constants.TipoAlgoritmoEnum;
@@ -88,14 +90,73 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 									 *  	igual como foi apresentado, para melhor visualização do que está acontecendo. 
 									 */
 									DMatrixRMaj vec_g = new DMatrixRMaj(sinais);
-									DMatrixRMaj vec_f0 = new DMatrixRMaj(sinais.length);
+									DMatrixRMaj vec_f = new DMatrixRMaj(sinais.length);
+									DMatrixRMaj mat_H = new DMatrixRMaj(sinais.length, sinais.length);
+									
+									int i = 0;
 									
 									if (item.getCodigoTipoAlgoritmo().compareTo(TipoAlgoritmoEnum.ALGORITMO_1.getCodigo()) == 0 ) {
-										/**
-										 * Fazer reconstrucao do algoritmo 1 aqui.
-										 * 
-										 * 
-										 */
+										DMatrixRMaj vec_aux = new DMatrixRMaj();
+										CommonOps_DDRM.mult(mat_H, vec_f, vec_aux);
+										
+										DMatrixRMaj vec_r = new DMatrixRMaj();
+										
+										CommonOps_DDRM.subtract(vec_g, vec_aux, vec_r);
+										
+										DMatrixRMaj vec_p = new DMatrixRMaj();
+										
+										CommonOps_DDRM.multTransA(mat_H, vec_r, vec_p);
+										
+										
+										double epsum = 1.0;
+										
+										DMatrixRMaj mat_inner_r = new DMatrixRMaj();
+										DMatrixRMaj mat_inner_r1 = new DMatrixRMaj();
+										DMatrixRMaj mat_inner_p = new DMatrixRMaj();
+										
+										DMatrixRMaj vec_f1 = new DMatrixRMaj();
+										DMatrixRMaj vec_r1 = new DMatrixRMaj();
+										DMatrixRMaj vec_p1 = new DMatrixRMaj();
+										
+										double alpha = 0.0;
+										double beta = 0.0;
+										
+										// no final do loop, f final estará em vec_f1
+										while (epsum > 0.0001) {
+											i++;
+											
+											// alpha(i) = rT(i)*r(i) / pT(i) * p(i)
+											CommonOps_DDRM.multInner(vec_p, mat_inner_p); // pT(i) * p(i)
+											CommonOps_DDRM.multInner(vec_r, mat_inner_r); // rT(i)*r(i)
+											//alpha = ? mat_inner_r / mat_inner_p
+											
+											// f(i+1) = f(i) + alpha(i) * p(i)
+											CommonOps_DDRM.add(vec_f, alpha, vec_p, vec_f1);
+											
+											// r(i+1) = r(i) - alpha(i) * H * p(i)
+											vec_r1 = vec_r.copy(); // r(i+1) = r(i)
+											CommonOps_DDRM.multAdd(-alpha, mat_H, vec_p, vec_r1); // r(i+1) = r(i+1) - alpha(i) * H * p(i)
+											
+											// calculo epsum
+											epsum = NormOps_DDRM.normP2(vec_r1) - NormOps_DDRM.normP2(vec_r);
+											
+											if (epsum <= 0.0001) {
+												break;
+											}
+											
+											// beta(i) = rT(i+1)*r(i+1) / rT(i)*r(i)
+											CommonOps_DDRM.multInner(vec_r1, mat_inner_r1); // rT(i+1)*r(i+1)
+											//beta = ? mat_inner_r1 / mat_inner_r
+											
+											// p(i+1) = HT * r(i+1) + beta(i) * p(i)
+											CommonOps_DDRM.multTransA(mat_H, vec_r1, vec_p1); // p(i+1) = HT * r(i+1)
+											CommonOps_DDRM.addEquals(vec_p1, beta, vec_p); // p(i+1) = p(i+1) + beta * p(i)
+											
+											vec_r = vec_r1.copy();
+											vec_p = vec_p1.copy();
+											vec_f = vec_f1.copy();
+											
+										}
 									} else if (item.getCodigoTipoAlgoritmo().compareTo(TipoAlgoritmoEnum.ALGORITMO_2.getCodigo()) == 0 ) {
 										/**
 										 * Fazer reconstrucao do algoritmo 2 aqui.
@@ -103,6 +164,8 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 										 * 
 										 */
 									}
+									
+									item.setNumeroIteracoes(BigDecimal.valueOf(i));
 									
 									
 								}
