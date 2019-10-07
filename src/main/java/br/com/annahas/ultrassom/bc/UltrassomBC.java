@@ -98,7 +98,7 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 									
 									CommonOps_DDRM.transpose(vec_g);
 									
-									DMatrixRMaj vec_f = new DMatrixRMaj(sinais.length, 1);
+									DMatrixRMaj vec_f = new DMatrixRMaj(item.getLargura().intValue() * item.getAltura().intValue(), 1);
 									
 									
 									double[][] vec_num = null;
