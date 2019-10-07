@@ -8,6 +8,7 @@ import java.io.Reader;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.text.Normalizer;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,22 @@ import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 public class UltrassomUtil {
+	
+	public static List<Double> getRecordFromLine(String line) {
+	    List<Double> values = new ArrayList<>(3600);
+	    try (Scanner rowScanner = new Scanner(line)) {
+	        rowScanner.useDelimiter(",");
+	        while (rowScanner.hasNext()) {
+	        	String buf = rowScanner.next();
+	        	if ("0".equals(buf)) {
+	        		values.add(0.0);
+	        	} else {
+	        		values.add(Double.parseDouble(buf));
+	        	}
+	        }
+	    }
+	    return values;
+	}
 	
 	public static String multipartToString(final MultipartFormDataInput inputData) throws IOException {
 		Map<String, List<InputPart>> dataMap = inputData.getFormDataMap();

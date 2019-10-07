@@ -1,12 +1,14 @@
 package br.com.annahas.ultrassom.bc;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.transaction.Transactional;
 import javax.ws.rs.core.Response.Status;
@@ -71,7 +73,7 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 			synchronized (LOCK) {
 				if (!funcaoIniciada) {
 					funcaoIniciada = true;
-					new Thread() {
+					new Thread("infinita") {
 						public void run() {
 							while(true) {
 								Ultrassom item = null;
@@ -93,8 +95,58 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 									 *  	igual como foi apresentado, para melhor visualização do que está acontecendo. 
 									 */
 									DMatrixRMaj vec_g = new DMatrixRMaj(sinais);
-									DMatrixRMaj vec_f = new DMatrixRMaj(sinais.length);
-									DMatrixRMaj mat_H = new DMatrixRMaj(sinais.length, sinais.length);
+									
+									CommonOps_DDRM.transpose(vec_g);
+									
+									DMatrixRMaj vec_f = new DMatrixRMaj(sinais.length, 1);
+									
+									
+									double[][] vec_num = null;
+									
+									// internaliza a String para evitar utilização de recurso (mem) desnecessária
+									"0".intern(); ",".intern(); "0,".intern();
+									
+									File file = new File("/home/annahas/H-1.txt");
+									
+//									List<List<Double>> content = new ArrayList<>(50816);
+									try (
+											Scanner scanner = new Scanner(file, "UTF-8");
+									){
+										vec_num = new double[50816][3600];
+										int i = 0;
+										while (scanner.hasNextLine()) {
+											String line = scanner.nextLine();
+										    try (Scanner rowScanner = new Scanner(line)) {
+										        rowScanner.useDelimiter(",");
+										        int j = 0;
+										        while (rowScanner.hasNext()) {
+										        	String buf = rowScanner.next();
+										        	if ("0".equals(buf)) {
+										        		vec_num[i][j] = 0.0;
+										        	} else {
+										        		vec_num[i][j] = Double.parseDouble(buf);
+										        	}
+										        	j++;
+										        }
+										    }
+//											content.add(UltrassomUtil.getRecordFromLine());
+											i++;
+										}
+//										vec_num = new double[3600][3600];
+//										for (int i = 0; i < content.size(); i++) {
+//											for (int j = 0; j < content.get(i).size(); j++) {
+//												vec_num[i][j] = content.get(i).get(j);
+//											}
+//										}
+									} catch (Exception e) {
+										e.printStackTrace();
+										System.out.println(e);
+									}
+									
+									
+									DMatrixRMaj mat_H = new DMatrixRMaj(vec_num);
+									
+									
 									
 									int i = 0;
 									
@@ -131,7 +183,7 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 											// alpha(i) = rT(i)*r(i) / pT(i) * p(i)
 											CommonOps_DDRM.multInner(vec_p, mat_inner_p); // pT(i) * p(i)
 											CommonOps_DDRM.multInner(vec_r, mat_inner_r); // rT(i)*r(i)
-											//alpha = ? mat_inner_r / mat_inner_p
+											alpha = mat_inner_r.get(0, 0) / mat_inner_p.get(0, 0);
 											
 											// f(i+1) = f(i) + alpha(i) * p(i)
 											CommonOps_DDRM.add(vec_f, alpha, vec_p, vec_f1);
@@ -150,7 +202,7 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 											
 											// beta(i) = rT(i+1)*r(i+1) / rT(i)*r(i)
 											CommonOps_DDRM.multInner(vec_r1, mat_inner_r1); // rT(i+1)*r(i+1)
-											//beta = ? mat_inner_r1 / mat_inner_r
+											beta = mat_inner_r1.get(0, 0) / mat_inner_r.get(0, 0);
 											
 											// p(i+1) = HT * r(i+1) + beta(i) * p(i)
 											CommonOps_DDRM.multTransA(mat_H, vec_r1, vec_p1); // p(i+1) = HT * r(i+1)
