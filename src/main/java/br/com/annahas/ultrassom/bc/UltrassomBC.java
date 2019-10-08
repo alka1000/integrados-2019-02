@@ -34,6 +34,8 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 	
 	private static boolean funcaoIniciada = false;
 	
+	private static double[][] vec_num = null;
+	
 	public List<Ultrassom> findAll() {
 		return ((UltrassomDAO) dao).findAll();
 	}
@@ -49,7 +51,6 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 
 	@Transactional
 	public void salvaUltrassom(BigDecimal codigoUsuario, BigDecimal codigoAlgoritmo, BigDecimal altura, BigDecimal largura, final MultipartFormDataInput inputData) throws IOException, SQLException {
-		
 		
 		String conteudo = UltrassomUtil.multipartToString(inputData);
 		
@@ -122,37 +123,8 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 		
 		// --------------- CARREGA H
 		
-		double[][] vec_num = null;
-		// internaliza a String para evitar utilização de recurso (mem) desnecessária
-		"0".intern(); ",".intern(); "0,".intern();
-		
-		File file = new File("/home/annahas/H-1.txt");
-		
-		try (
-				Scanner scanner = new Scanner(file, "UTF-8");
-		){
-			vec_num = new double[50816][3600];
-			int i = 0;
-			while (scanner.hasNextLine()) {
-				String line = scanner.nextLine();
-			    try (Scanner rowScanner = new Scanner(line)) {
-			        rowScanner.useDelimiter(",");
-			        int j = 0;
-			        while (rowScanner.hasNext()) {
-			        	String buf = rowScanner.next();
-			        	if ("0".equals(buf)) {
-			        		vec_num[i][j] = 0.0;
-			        	} else {
-			        		vec_num[i][j] = Double.parseDouble(buf);
-			        	}
-			        	j++;
-			        }
-			    }
-				i++;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println(e);
+		if (vec_num == null) {
+			carregaVecNum();
 		}
 		
 		DMatrixRMaj mat_H = new DMatrixRMaj(vec_num);
@@ -242,7 +214,39 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 		((UltrassomDAO)dao).persist(item);
 	}
 	
-	
+	private void carregaVecNum() {
+		// internaliza a String para evitar utilização de recurso (mem) desnecessária
+		"0".intern(); ",".intern(); "0,".intern();
+		
+		File file = new File("/home/annahas/H-1.txt");
+		
+		try (
+				Scanner scanner = new Scanner(file, "UTF-8");
+		){
+			vec_num = new double[50816][3600];
+			int i = 0;
+			while (scanner.hasNextLine()) {
+				String line = scanner.nextLine();
+			    try (Scanner rowScanner = new Scanner(line)) {
+			        rowScanner.useDelimiter(",");
+			        int j = 0;
+			        while (rowScanner.hasNext()) {
+			        	String buf = rowScanner.next();
+			        	if ("0".equals(buf)) {
+			        		vec_num[i][j] = 0.0;
+			        	} else {
+			        		vec_num[i][j] = Double.parseDouble(buf);
+			        	}
+			        	j++;
+			        }
+			    }
+				i++;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(e);
+		}
+	}
 	
 }
 
