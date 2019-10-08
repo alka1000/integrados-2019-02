@@ -100,7 +100,8 @@ public class UltrassomREST {
 			final MultipartFormDataInput inputData
 		) {
 		try {
-			ultrassomBC.salvaUltrassom(codigoUsuario, codigoAlgoritmo, altura, largura, inputData);
+			BigDecimal codigo = ultrassomBC.salvaUltrassom(codigoUsuario, codigoAlgoritmo, altura, largura, inputData);
+			ultrassomBC.addListaProcessamento(codigo);
 			ultrassomBC.startThread();
 			return Response.noContent().build();
 		} catch (DemoiselleRestException dre) {

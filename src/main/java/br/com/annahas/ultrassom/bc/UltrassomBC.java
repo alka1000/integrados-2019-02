@@ -56,7 +56,7 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 	}
 
 	@Transactional
-	public void salvaUltrassom(BigDecimal codigoUsuario, BigDecimal codigoAlgoritmo, BigDecimal altura, BigDecimal largura, final MultipartFormDataInput inputData) throws IOException, SQLException {
+	public BigDecimal salvaUltrassom(BigDecimal codigoUsuario, BigDecimal codigoAlgoritmo, BigDecimal altura, BigDecimal largura, final MultipartFormDataInput inputData) throws IOException, SQLException {
 		
 		String conteudo = UltrassomUtil.multipartToString(inputData);
 		
@@ -75,13 +75,14 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 		
 		
 		((UltrassomDAO)dao).persist(ultrassom);
-		
-		synchronized (listaProcessamento) {
-			listaProcessamento.add(ultrassom.getCodigo());
-		}
-		
+		return ultrassom.getCodigo();
 	}
 	
+	public void addListaProcessamento(BigDecimal codigo) {
+		synchronized (listaProcessamento) {
+			listaProcessamento.add(codigo);
+		}
+	}
 	
 	
 	public void startThread() {
@@ -182,7 +183,7 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 				CommonOps_DDRM.multAdd(-alpha, mat_H, vec_p, vec_r1); // r(i+1) = r(i+1) - alpha(i) * H * p(i)
 				
 				// epsum = ||r(i+1)||2 -||r(i)||2 
-				epsum = NormOps_DDRM.normP2(vec_r1) - NormOps_DDRM.normP2(vec_r);
+				epsum = Math.abs(NormOps_DDRM.normP2(vec_r1) - NormOps_DDRM.normP2(vec_r));
 				
 				if (epsum <= 0.0001) {
 					vec_f = vec_f1.copy(); // f(i) = f(i+1)
@@ -239,8 +240,6 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 			e.printStackTrace();
 		}
 
-			
-			
 		((UltrassomDAO)dao).persist(item);
 	}
 	

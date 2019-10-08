@@ -237,7 +237,7 @@ public class Ultrassom implements Serializable {
 		return "Ultrassom [codigo=" + codigo + ", codigoUsuario=" + codigoUsuario + ", codigoTipoAlgoritmo="
 				+ codigoTipoAlgoritmo + ", dataInicioReconstrucao=" + dataInicioReconstrucao + ", dataFimReconstrucao="
 				+ dataFimReconstrucao + ", altura=" + altura + ", largura=" + largura + ", numeroIteracoes="
-				+ numeroIteracoes + ", sinal=" + sinal + ", imagem=" + imagem + "]";
+				+ numeroIteracoes + "]";
 	}
 	
 }
