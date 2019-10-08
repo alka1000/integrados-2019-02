@@ -2,9 +2,11 @@ package br.com.annahas.ultrassom.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.Calendar;
 
 import br.com.annahas.ultrassom.entity.Ultrassom;
+import br.com.annahas.ultrassom.util.UltrassomUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -36,6 +38,9 @@ public class UltrassomDTO implements Serializable {
 	@ApiModelProperty(value = "Algoritmo utilizado.", dataType = "int")
 	private BigDecimal algoritmo;
 	
+	@ApiModelProperty(value = "Base64 da imagem.")
+	private String imagem;
+	
 	public UltrassomDTO() {
 	}
 	
@@ -62,6 +67,12 @@ public class UltrassomDTO implements Serializable {
 		this.largura = ultrassom.getLargura();
 		this.algoritmo = ultrassom.getCodigoTipoAlgoritmo();
 		this.numeroIteracoes = ultrassom.getNumeroIteracoes();
+		try {
+			this.imagem = UltrassomUtil.generateFotoBase64(ultrassom.getImagem());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public BigDecimal getCodigo() {
@@ -130,6 +141,14 @@ public class UltrassomDTO implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getImagem() {
+		return imagem;
+	}
+
+	public void setImagem(String imagem) {
+		this.imagem = imagem;
 	}
 
 	@Override

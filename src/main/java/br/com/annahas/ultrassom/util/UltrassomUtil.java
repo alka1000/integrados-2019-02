@@ -21,6 +21,31 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 public class UltrassomUtil {
 	
+	public static double[] transformaVetorImagem(double[] vec) {
+		double min = Double.MAX_VALUE;
+		
+		for (int i = 0; i < vec.length; i++) {
+			if (vec[i] < min) {
+				min = vec[i];
+			}
+		}
+		
+		double max = Double.MIN_VALUE;
+		
+		for (int i = 0; i < vec.length; i++) {
+			if (vec[i] > max) {
+				max = vec[i];
+			}
+		}
+		
+		for (int i = 0; i < vec.length; i++) {
+			vec[i] = 255.0 * ((vec[i]-min)/(max-min));
+		}
+		
+		return vec;
+		
+	}
+	
 	public static String multipartToString(final MultipartFormDataInput inputData) throws IOException {
 		Map<String, List<InputPart>> dataMap = inputData.getFormDataMap();
 		if (dataMap.get("ultrassom").size() > 0) {
@@ -127,6 +152,8 @@ public class UltrassomUtil {
 	
 	public static String generateFotoBase64(Blob conteudoBlob) throws SQLException {
 
+		if (conteudoBlob == null) return null;
+		
 		byte[] bytes = conteudoBlob.getBytes(1,  (int) conteudoBlob.length());
 		
 		return Base64.getEncoder().encodeToString(bytes);

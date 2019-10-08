@@ -1,8 +1,13 @@
 package br.com.annahas.ultrassom.bc;
 
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -10,6 +15,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.imageio.ImageIO;
 import javax.transaction.Transactional;
 import javax.ws.rs.core.Response.Status;
 
@@ -210,7 +216,31 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 		 * transformar o vec_f em imagem (Blob de base64) e salvar na entidade
 		 * 
 		 */
+		double[] f = vec_f.getData();
+		f = UltrassomUtil.transformaVetorImagem(f);
+		BufferedImage image = new BufferedImage(item.getLargura().intValue(), item.getAltura().intValue(), BufferedImage.TYPE_INT_RGB);
+		for (int ii = 0; ii < item.getAltura().intValue(); ii++) {
+			for (int j = 0; j < item.getLargura().intValue(); j++) {
+				Color color = new Color((int)f[ii*item.getLargura().intValue()+j], (int)f[ii*item.getLargura().intValue()+j], (int)f[ii*item.getLargura().intValue()+j]);
+				image.setRGB(ii, j, color.getRGB());
+			}
+		}
 		
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+			ImageIO.write(image, "png", baos);
+			InputStream is = new ByteArrayInputStream(baos.toByteArray());
+			item.setImagem(UltrassomUtil.generateBlobFile(is));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+			
+			
 		((UltrassomDAO)dao).persist(item);
 	}
 	
