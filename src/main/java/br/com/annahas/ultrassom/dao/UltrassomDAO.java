@@ -25,6 +25,7 @@ public class UltrassomDAO extends AbstractDAO<Ultrassom, BigDecimal> {
 		return this.manager;
 	}
 	
+	
 	public List<Ultrassom> findAll() {
 		CriteriaBuilder builder = getEntityManager().getCriteriaBuilder();
 		CriteriaQuery<Ultrassom> query = builder.createQuery(Ultrassom.class);

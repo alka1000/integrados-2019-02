@@ -101,7 +101,7 @@ public class UltrassomREST {
 		) {
 		try {
 			ultrassomBC.salvaUltrassom(codigoUsuario, codigoAlgoritmo, altura, largura, inputData);
-			
+			ultrassomBC.startThread();
 			return Response.noContent().build();
 		} catch (DemoiselleRestException dre) {
 			throw dre;
