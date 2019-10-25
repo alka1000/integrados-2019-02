@@ -351,27 +351,85 @@
 
   <!-- Resources -->
   <h2>Arquivos</h2>
-  <p>Upload de sinal de ultrassom:</p>
 
-  <div ng-app="MyApp" ng-controller="AppCtrl" layout-margin layout-padding>
-    
-    <input class="ng-hide" id="input-file-id" multiple type="file" />
-    <mat-icon>attachment</mat-icon>
 
-    <label for="input-file-id" class="md-button md-raised md-primary">Escolha Ultrassom</label>
+
+  <app-upload></app-upload>
+
+  <h3>Upload de sinal de ultrassom:</h3>
+  <div>
+     <form #userForm="ngForm" (ngSubmit)="onFormSubmit(userForm)">
+      <div> 
+        Usuario: <input name="usuario" ngModel required #userName="ngModel">
+      </div> 
+      <div> 	 
+        Algoritmo: <input name="algoritmo" ngModel required #userAlgo="ngModel">
+      </div>
+      <div> 	 
+          S: <input name="sImagem" ngModel required #userS="ngModel" (change)="Smudou(userS.value)" >
+      </div>	 	  
+      <div> 	  
+        Imagem: <mat-icon>attachment</mat-icon> <input #fileInput required (change)="fileChanged($event)" name="imagem" id="input-file-id" type="file" name="imagem" ngModel>	  
+        <label for="input-file-id" class="md-button md-raised md-primary">Escolha Ultrassom</label>
+
+      </div>	  
+      <div>
+        <button type="button" (click)="uploadDocument(file)">ReadFile</button>
+
+        <button type="button" (click)="resetUserForm(userForm)">Reset</button> 	        
+        <div *ngIf=userForm.valid class="card card-small"  tabindex="0">
+          <mat-icon>cloud_upload</mat-icon>
+          <button>Mandar ao servidor </button> 
+        </div>
+
+      </div>	  
+    </form>
   </div>
-
-
-
-  <div class="card card-small" (click)="selection.value = 'dependency'" tabindex="0">
-    <mat-icon>cloud_upload</mat-icon>
-    <span>Mandar ao servidor </span>
+  <div>
+    <p>Form value: <b> {{ userForm.value | json }} </b></p>
+    <p>Form valid: <b> {{ userForm.valid }} </b></p>
+    <p>Form touched: <b> {{ userForm.touched }} </b></p>
+    <p>Form submitted: <b> {{ userForm.submitted }} </b></p>
   </div>
+  <div>
+    <p>Name value: <b> {{ userName.value }} </b></p>
+    <p>Name valid: <b> {{ userName.valid }} </b></p>
+  </div>
+  <div>
+    <p>Algo value: <b> {{ userAlgo.value }} </b></p>
+    <p>Algo valid: <b> {{ userAlgo.valid }} </b></p>
+  </div> 
 
-  <div class="card card-small" (click)="selection.value = 'dependency'" tabindex="0">
-      <mat-icon>cloud_done</mat-icon>
-      <span>Concluido o envio </span>
+
+
+    <div *ngIf=userForm.submitted>
+      <div class="card card-small" tabindex="0">
+        <mat-icon>cloud_done</mat-icon>
+        <span>Concluido o envio </span>
+      </div>
     </div>
+
+
+    <h2>hostName = "localhost"
+      hostPort = 9000</h2>
+
+
+
+      <script>
+        var app = angular.module('myApp', []);
+        app.controller('myCtrl', function($scope, $http) {
+          $http({
+            method : "GET",
+            url : "welcome.htm"
+          }).then(function mySuccess(response) {
+              $scope.myWelcome = response.data;
+            }, function myError(response) {
+              $scope.myWelcome = response.statusText;
+          });
+        });
+        </script>
+
+
 
   <!-- Imagens -->
   <h2>Imagens</h2>
@@ -383,10 +441,7 @@
   <mat-icon>cloud_off</mat-icon>
   <mat-icon>cloud_queue</mat-icon>
   <mat-icon>folder</mat-icon>
-  <div id="carouselExampleControls">
-          <img class="d-block w-100" src="https://www.travelexcellence.com/images/movil/La_Paz_Waterfall.jpg" alt="First slide">
-          <img class="d-block w-100" src="http://www.parasholidays.in/blog/wp-content/uploads/2014/05/holiday-tour-packages-for-usa.jpg" alt="Second slide">
-    </div>
+
 
   <mat-form-field>
       <mat-label>Select an option</mat-label>
