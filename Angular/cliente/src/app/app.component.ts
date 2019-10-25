@@ -81,7 +81,7 @@ export class AppComponent implements OnInit {
       //console.log(fileReader.result);
       var imagemInicio = fileReader.result.toString().split('\n');
 
-      this.imagem = this.listToMatrix(imagemInicio,this.Simagem)
+      this.imagem = this.listSinal(imagemInicio,this.Simagem)
       console.log(this.imagem);
       
     }
@@ -89,19 +89,17 @@ export class AppComponent implements OnInit {
   
   }
 
-  listToMatrix(list, elementsPerSubArray) {
-    var matrix = [], i, k;
+  listSinal(list, elementsPerSubArray) {
+    var gama = [elementsPerSubArray], i, k;
+    
+    for(int i = 0; i < y.size;i++)
+        gama[i] = 100 + (1/20) * i * sqrt(i);
+        
+    for(int i = 0;i < sinal.size;i++)
+        sinal[i] = sinal[i] * gama[i%gama.size]
 
-    for (i = 0, k = -1; i < list.length; i++) {
-        if (i % elementsPerSubArray === 0) {
-            k++;
-            matrix[k] = [];
-        }
 
-        matrix[k].push(list[i]);
-    }
-
-    return matrix;
+    return sinal;
 }
 
 
