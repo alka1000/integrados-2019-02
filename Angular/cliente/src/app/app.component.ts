@@ -69,6 +69,8 @@ export class AppComponent implements OnInit {
     const url = this.URL + "/algoritmo/" + this.codigoAlgoritmo + "/altura/" + this.valorAltura + "/largura/" + this.valorLargura + 
     "/usuario/" + this.codigoUsuario;
     return this.httpClient.post(url, formData, options);
+    
+    //.subscribe => blabla
   }
 
   uploadDocument(file) {
