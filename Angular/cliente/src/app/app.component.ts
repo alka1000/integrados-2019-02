@@ -90,17 +90,18 @@ export class AppComponent implements OnInit {
   }
 
   listSinal(list, elementsPerSubArray) {
-    var gama = [elementsPerSubArray], i, k;
-    
-    for(int i = 0; i < y.size;i++)
-        gama[i] = 100 + (1/20) * i * sqrt(i);
+    var gama = [elementsPerSubArray], i,y, k;
+    var sinal;
+
+    for(i = 0; i < y.size;i++)
+        gama[i] = 100 + (1/20) * i * Math.sqrt(i);
         
-    for(int i = 0;i < sinal.size;i++)
-        sinal[i] = sinal[i] * gama[i%gama.size]
+    for(i = 0;i < sinal.size;i++)
+        sinal[i] = sinal[i] * gama[i%gama.length]
 
 
     return sinal;
-}
+  } 
 
 
 }
