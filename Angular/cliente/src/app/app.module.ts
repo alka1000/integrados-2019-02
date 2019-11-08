@@ -17,11 +17,14 @@ import { Injectable } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { UploadModule } from './upload/upload.module';
+import { UltrassomListComponent } from './ultrassom-list.component';
+import { UltrassomService} from './ultrassom.service'
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    UltrassomListComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +41,7 @@ import { UploadModule } from './upload/upload.module';
     UploadModule
     
   ],
-  providers: [],
+  providers: [UltrassomService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

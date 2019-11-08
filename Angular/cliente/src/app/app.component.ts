@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Ultrassom } from './ultrassom';
+import { IUltrassom } from './ultrassom';
 import { Observable } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http'
 
@@ -48,13 +48,6 @@ export class AppComponent implements OnInit {
     this.Simagem = S;
     console.log(this.Simagem);
   }
-
-  public getImage(ultra: Ultrassom): Observable<Blob> {
-    return this.httpClient
-      .get(`${this.URL}/${ultra.idUsuario}`, {
-        responseType: "blob"
-      });
-  }
   
   uploadServer(formData: FormData, code: string) {
     // /** In Angular 5, including the header Content-Type can invalidate your request */
@@ -70,7 +63,6 @@ export class AppComponent implements OnInit {
     "/usuario/" + this.codigoUsuario;
     return this.httpClient.post(url, formData, options);
     
-    //.subscribe => blabla
   }
 
   uploadDocument(file) {
@@ -82,7 +74,10 @@ export class AppComponent implements OnInit {
       var imagemInicio = fileReader.result.toString().split('\n');
 
       this.imagem = this.listSinal(imagemInicio,this.Simagem)
-      console.log(this.imagem);
+      console.log("imagem" + imagemInicio);
+
+      console.log("sinal" + this.imagem);
+
       
     }
     fileReader.readAsBinaryString(this.file);
