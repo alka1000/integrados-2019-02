@@ -1,5 +1,5 @@
 export class Ultrassom {
-    public idImagem: bigInteger;
+    public idImagem: BigInteger;
     public idUsuario: BigInteger;
     public idAlgoritmo: BigInteger;
     public dataInicio: Date;
