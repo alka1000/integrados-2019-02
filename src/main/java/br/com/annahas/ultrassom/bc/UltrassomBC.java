@@ -24,6 +24,7 @@ import org.demoiselle.jee.rest.exception.DemoiselleRestException;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
 import org.ejml.dense.row.NormOps_DDRM;
+import org.ejml.dense.row.SpecializedOps_DDRM;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import br.com.annahas.ultrassom.constants.TipoAlgoritmoEnum;
@@ -112,6 +113,15 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 	
 	@Transactional
 	public void calculosUpdate(BigDecimal codigoItem) {
+		// --------------- CARREGA H
+		
+		if (vec_num == null) {
+			carregaVecNum();
+		}
+		
+		DMatrixRMaj mat_H = new DMatrixRMaj(vec_num);
+		
+		//-------------------------------------
 		Ultrassom item = find(codigoItem);
 		item.setDataInicioReconstrucao(Calendar.getInstance());
 		
@@ -128,15 +138,6 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 		
 		DMatrixRMaj vec_f = new DMatrixRMaj(item.getLargura().intValue() * item.getAltura().intValue(), 1);
 		
-		// --------------- CARREGA H
-		
-		if (vec_num == null) {
-			carregaVecNum();
-		}
-		
-		DMatrixRMaj mat_H = new DMatrixRMaj(vec_num);
-		
-		//-------------------------------------
 		
 		int i = 0;
 		
@@ -148,7 +149,7 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 			
 			CommonOps_DDRM.subtract(vec_g, vec_aux, vec_r);
 			
-			DMatrixRMaj vec_p = new DMatrixRMaj(mat_H.getNumCols(), vec_r.numCols);
+			DMatrixRMaj vec_p = new DMatrixRMaj(mat_H.getNumCols(), vec_r.getNumCols());
 			
 			CommonOps_DDRM.multTransA(mat_H, vec_r, vec_p);
 			
@@ -204,11 +205,69 @@ public class UltrassomBC extends AbstractBusiness<Ultrassom, BigDecimal> {
 				
 			}
 		} else if (item.getCodigoTipoAlgoritmo().compareTo(TipoAlgoritmoEnum.ALGORITMO_2.getCodigo()) == 0 ) {
-			/**
-			 * Fazer reconstrucao do algoritmo 2 aqui.
-			 * 
-			 * 
-			 */
+			DMatrixRMaj vec_y = vec_f.copy();
+			double alpha = 1.0;
+			
+			double epsum = 1;
+			
+			DMatrixRMaj vec_y1 = vec_y.copy();
+			double alpha1 = alpha;
+			
+			DMatrixRMaj vec_f1 = vec_f.copy();
+			DMatrixRMaj vec_aux2 = vec_f.copy();
+			
+			DMatrixRMaj vec_f_minus_f1 = vec_f.copy();
+//			
+//			DMatrixRMaj mat_aux = mat_H.copy();
+//			SpecializedOps_DDRM.multLowerTranA(mat_aux);
+//
+//			double c = NormOps_DDRM.normP2(mat_aux);
+			double c = 1.0;
+			DMatrixRMaj vec_gamma_aux = new DMatrixRMaj(mat_H.getNumCols(), vec_g.getNumCols());
+			CommonOps_DDRM.multTransA(mat_H, vec_g, vec_gamma_aux);
+			double gamma = CommonOps_DDRM.elementMaxAbs(vec_gamma_aux) * 0.1;
+			
+			
+			while (epsum > 0.0001) {				
+				vec_aux2 = vec_g.copy();
+				CommonOps_DDRM.multAdd(-1.0, mat_H, vec_y, vec_aux2); // g - Hyi
+				vec_f1 = vec_y.copy();
+				CommonOps_DDRM.multAddTransA(1.0/c, mat_H, vec_aux2, vec_f1); // 1/c HT (g-Hyi)
+				CommonOps_DDRM.addEquals(vec_f1, vec_y); // yi + 1/c HT (g-Hyi)
+				
+				vec_f1.iterator(true, 0, 0, vec_f1.getNumRows()-1, vec_f1.getNumCols()-1).forEachRemaining(num -> {
+					if (num > 0) {
+						num = num - gamma/c;
+						if (num < 0) {
+							num = 0.0;
+						}
+					} else {
+						num = num + gamma/c;
+						if (num > 0) {
+							num = 0.0;
+						}
+					}
+				});
+				
+				
+				CommonOps_DDRM.add(1.0, vec_f, -1.0, vec_f1, vec_f_minus_f1);
+				epsum = NormOps_DDRM.normP2(vec_f_minus_f1);
+				if (epsum <= 0.0001) {
+					vec_f = vec_f1.copy(); // f(i) = f(i+1)
+					break;
+				}
+				
+				alpha1 = (1.0 + Math.sqrt(1 + (4 * alpha * alpha))) / 2.0;
+				
+				
+				CommonOps_DDRM.add((alpha-1.0)/alpha1, vec_f1, -(alpha-1.0)/alpha1, vec_f, vec_y1);
+				CommonOps_DDRM.addEquals(vec_y1, vec_f1);
+				
+				vec_y = vec_y1.copy();
+				vec_f = vec_f1.copy();
+				
+			}
+			
 		}
 		
 		item.setNumeroIteracoes(BigDecimal.valueOf(i));
