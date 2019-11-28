@@ -1,81 +1,77 @@
-package br.com.annahas.ultrassom.entity;
+package br.com.annahas.ultrassom.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Blob;
 import java.util.Calendar;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import br.com.annahas.ultrassom.entity.Ultrassom;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
-import br.com.annahas.ultrassom.dto.UltrassomCadastroDTO;
+@ApiModel(description = "DTO do ultrassom.")
+public class UltrassomCadastroDTO implements Serializable {
+	private static final long serialVersionUID = 6801551322329612970L;
 
-@Entity
-@Table(name = "ultrassom", schema = "annahas")
-public class Ultrassom implements Serializable {
-	private static final long serialVersionUID = -4596465796503453763L;
-
-	@Id
-	@GeneratedValue
-	@Column(name = "codigo")
+	@ApiModelProperty(value = "Código identificador do ultrassom.", dataType = "int")
 	private BigDecimal codigo;
-
-	@Column(name = "codigousuario")
-	private BigDecimal codigoUsuario;
-
-	@Column(name = "codigotipoalgoritmo")
-	private BigDecimal codigoTipoAlgoritmo;
 	
-	@Column(name = "datainicio")
+	@ApiModelProperty(value = "Código identificador do usuário.", dataType = "int")
+	private BigDecimal codigoUsuario;
+	
+	@ApiModelProperty(value = "Timestamp do começo da reconstrução.")
 	private Calendar dataInicioReconstrucao;
 	
-	@Column(name = "datafim")
+	@ApiModelProperty(value = "Timestamp do término da reconstrução.")
 	private Calendar dataFimReconstrucao;
 	
-	@Column(name = "altura")
+	@ApiModelProperty(value = "Tamanho da altura da imagem em pixels.", dataType = "int")
 	private BigDecimal altura;
 	
-	@Column(name = "largura")
+	@ApiModelProperty(value = "Tamanho da largura da imagem em pixels.", dataType = "int")
 	private BigDecimal largura;
 	
-	@Column(name = "numeroiteracoes")
+	@ApiModelProperty(value = "Número de iterações realizadas para reconstruir a imagem.", dataType = "int")
 	private BigDecimal numeroIteracoes;
 	
-	@Column(name = "sinal")
-	@Lob
-	private String sinal;
+	@ApiModelProperty(value = "Algoritmo utilizado.", dataType = "int")
+	private BigDecimal algoritmo;
 	
-	@Column(name = "imagem")
-	private Blob imagem;
-
-	public Ultrassom() {
+	@ApiModelProperty(value = "Base64 da imagem.")
+	private String imagem;
+	
+	@ApiModelProperty(value = "Blob da imagem.")
+	private Blob blob;
+	
+	public UltrassomCadastroDTO() {
 	}
-
-	public Ultrassom(BigDecimal codigo, BigDecimal codigoUsuario, BigDecimal codigoTipoAlgoritmo,
-			Calendar dataInicioReconstrucao, Calendar dataFimReconstrucao, BigDecimal altura, BigDecimal largura,
-			BigDecimal numeroIteracoes, String sinal, Blob imagem) {
+	
+	public UltrassomCadastroDTO(BigDecimal codigo, BigDecimal codigoUsuario, Calendar dataInicioReconstrucao,
+			Calendar dataFimReconstrucao, BigDecimal altura, BigDecimal largura, BigDecimal numeroIteracoes,
+			BigDecimal algoritmo, Blob blob) {
 		super();
 		this.codigo = codigo;
 		this.codigoUsuario = codigoUsuario;
-		this.codigoTipoAlgoritmo = codigoTipoAlgoritmo;
 		this.dataInicioReconstrucao = dataInicioReconstrucao;
 		this.dataFimReconstrucao = dataFimReconstrucao;
 		this.altura = altura;
 		this.largura = largura;
 		this.numeroIteracoes = numeroIteracoes;
-		this.sinal = sinal;
-		this.imagem = imagem;
+		this.algoritmo = algoritmo;
+		this.blob = blob;
 	}
 
-	public void update(UltrassomCadastroDTO dto) {
-		this.dataInicioReconstrucao = dto.getDataInicioReconstrucao();
-		this.dataFimReconstrucao = dto.getDataFimReconstrucao();
-		this.numeroIteracoes = dto.getNumeroIteracoes();
-		this.imagem = dto.getBlob();
+	public UltrassomCadastroDTO(Ultrassom ultrassom) {
+		this.codigo = ultrassom.getCodigo();
+		this.codigoUsuario = ultrassom.getCodigoUsuario();
+		this.dataInicioReconstrucao = ultrassom.getDataInicioReconstrucao();
+		this.dataFimReconstrucao = ultrassom.getDataFimReconstrucao();
+		this.altura = ultrassom.getAltura();
+		this.largura = ultrassom.getLargura();
+		this.algoritmo = ultrassom.getCodigoTipoAlgoritmo();
+		this.numeroIteracoes = ultrassom.getNumeroIteracoes();
+		this.imagem = ultrassom.getSinal();
+		this.blob = ultrassom.getImagem();
 	}
 
 	public BigDecimal getCodigo() {
@@ -92,14 +88,6 @@ public class Ultrassom implements Serializable {
 
 	public void setCodigoUsuario(BigDecimal codigoUsuario) {
 		this.codigoUsuario = codigoUsuario;
-	}
-
-	public BigDecimal getCodigoTipoAlgoritmo() {
-		return codigoTipoAlgoritmo;
-	}
-
-	public void setCodigoTipoAlgoritmo(BigDecimal codigoTipoAlgoritmo) {
-		this.codigoTipoAlgoritmo = codigoTipoAlgoritmo;
 	}
 
 	public Calendar getDataInicioReconstrucao() {
@@ -142,40 +130,46 @@ public class Ultrassom implements Serializable {
 		this.numeroIteracoes = numeroIteracoes;
 	}
 
-	public String getSinal() {
-		return sinal;
+	public BigDecimal getAlgoritmo() {
+		return algoritmo;
 	}
 
-	public void setSinal(String sinal) {
-		this.sinal = sinal;
-	}
-
-	public Blob getImagem() {
-		return imagem;
-	}
-
-	public void setImagem(Blob imagem) {
-		this.imagem = imagem;
+	public void setAlgoritmo(BigDecimal algoritmo) {
+		this.algoritmo = algoritmo;
 	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
 
+	public String getImagem() {
+		return imagem;
+	}
+
+	public void setImagem(String imagem) {
+		this.imagem = imagem;
+	}
+
+	public Blob getBlob() {
+		return blob;
+	}
+
+	public void setBlob(Blob blob) {
+		this.blob = blob;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((algoritmo == null) ? 0 : algoritmo.hashCode());
 		result = prime * result + ((altura == null) ? 0 : altura.hashCode());
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
-		result = prime * result + ((codigoTipoAlgoritmo == null) ? 0 : codigoTipoAlgoritmo.hashCode());
 		result = prime * result + ((codigoUsuario == null) ? 0 : codigoUsuario.hashCode());
 		result = prime * result + ((dataFimReconstrucao == null) ? 0 : dataFimReconstrucao.hashCode());
 		result = prime * result + ((dataInicioReconstrucao == null) ? 0 : dataInicioReconstrucao.hashCode());
-		result = prime * result + ((imagem == null) ? 0 : imagem.hashCode());
 		result = prime * result + ((largura == null) ? 0 : largura.hashCode());
 		result = prime * result + ((numeroIteracoes == null) ? 0 : numeroIteracoes.hashCode());
-		result = prime * result + ((sinal == null) ? 0 : sinal.hashCode());
 		return result;
 	}
 
@@ -187,7 +181,12 @@ public class Ultrassom implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Ultrassom other = (Ultrassom) obj;
+		UltrassomCadastroDTO other = (UltrassomCadastroDTO) obj;
+		if (algoritmo == null) {
+			if (other.algoritmo != null)
+				return false;
+		} else if (!algoritmo.equals(other.algoritmo))
+			return false;
 		if (altura == null) {
 			if (other.altura != null)
 				return false;
@@ -197,11 +196,6 @@ public class Ultrassom implements Serializable {
 			if (other.codigo != null)
 				return false;
 		} else if (!codigo.equals(other.codigo))
-			return false;
-		if (codigoTipoAlgoritmo == null) {
-			if (other.codigoTipoAlgoritmo != null)
-				return false;
-		} else if (!codigoTipoAlgoritmo.equals(other.codigoTipoAlgoritmo))
 			return false;
 		if (codigoUsuario == null) {
 			if (other.codigoUsuario != null)
@@ -218,11 +212,6 @@ public class Ultrassom implements Serializable {
 				return false;
 		} else if (!dataInicioReconstrucao.equals(other.dataInicioReconstrucao))
 			return false;
-		if (imagem == null) {
-			if (other.imagem != null)
-				return false;
-		} else if (!imagem.equals(other.imagem))
-			return false;
 		if (largura == null) {
 			if (other.largura != null)
 				return false;
@@ -233,20 +222,14 @@ public class Ultrassom implements Serializable {
 				return false;
 		} else if (!numeroIteracoes.equals(other.numeroIteracoes))
 			return false;
-		if (sinal == null) {
-			if (other.sinal != null)
-				return false;
-		} else if (!sinal.equals(other.sinal))
-			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Ultrassom [codigo=" + codigo + ", codigoUsuario=" + codigoUsuario + ", codigoTipoAlgoritmo="
-				+ codigoTipoAlgoritmo + ", dataInicioReconstrucao=" + dataInicioReconstrucao + ", dataFimReconstrucao="
-				+ dataFimReconstrucao + ", altura=" + altura + ", largura=" + largura + ", numeroIteracoes="
-				+ numeroIteracoes + "]";
+		return "UltrassomDTO [codigo=" + codigo + ", codigoUsuario=" + codigoUsuario + ", dataInicioReconstrucao="
+				+ dataInicioReconstrucao + ", dataFimReconstrucao=" + dataFimReconstrucao + ", altura=" + altura
+				+ ", largura=" + largura + ", numeroIteracoes=" + numeroIteracoes + ", algoritmo=" + algoritmo + "]";
 	}
 	
 }
