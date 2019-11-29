@@ -55,7 +55,7 @@ public class InfinityCalc {
 		//-------------------------------------
 		dto.setDataInicioReconstrucao(Calendar.getInstance());
 		
-		String[] sinaisStr = dto.getImagem().split(",");
+		String[] sinaisStr = dto.getImagem().split(separator);
 		double[] sinais = new double[sinaisStr.length];
 		for (int i = 0; i < sinaisStr.length; i++) {
 			sinais[i] = Double.parseDouble(sinaisStr[i]);
@@ -158,7 +158,8 @@ public class InfinityCalc {
 			double gamma = CommonOps_DDRM.elementMaxAbs(vec_gamma_aux) * 0.1;
 			
 			
-			while (epsum > 0.0001) {				
+			while (epsum > 0.0001) {		
+				i++;
 				vec_aux2 = vec_g.copy();
 				CommonOps_DDRM.multAdd(-1.0, mat_H, vec_y, vec_aux2); // g - Hyi
 				vec_f1 = vec_y.copy();
@@ -246,7 +247,7 @@ public class InfinityCalc {
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine();
 			    try (Scanner rowScanner = new Scanner(line)) {
-			        rowScanner.useDelimiter(separator);
+			        rowScanner.useDelimiter(",");
 			        int j = 0;
 			        while (rowScanner.hasNext()) {
 			        	String buf = rowScanner.next();
